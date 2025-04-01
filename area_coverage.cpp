@@ -6,6 +6,7 @@ Area_Coverage::Area_Coverage(int rows, int cols)
 
 {
   map = std::vector<std::vector<int>>(rows, std::vector<int>(cols, 0));
+  pheromone = std::vector<std::vector<int>>(rows, std::vector<int>(cols, 0));
 }
 
 struct Node
@@ -52,7 +53,7 @@ void Area_Coverage::set_map_zeros()
   }
 }
 
-bool Area_Coverage::area_done(std::vector<std::vector<int>> &pheromone)
+bool Area_Coverage::area_done()
 {
   for (int i = 0; i < rows; ++i)
   {
@@ -75,8 +76,7 @@ bool Area_Coverage::is_valid(int row, int col)
 
 // Heuristic function to calculate Manhattan distance with obstacle penalty
 double Area_Coverage::get_heuristic(Area_Coverage::Cell current,
-                                    Area_Coverage::Cell goal,
-                                    std::vector<std::vector<int>> &pheromone)
+                                    Area_Coverage::Cell goal)
 {
   double distance = abs(current.row - goal.row) + abs(current.col - goal.col);
 
@@ -199,8 +199,7 @@ bool Area_Coverage::check_goal(Area_Coverage::Cell &goal)
 // Function to run A* algorithm
 std::vector<Area_Coverage::Cell>
 Area_Coverage::run_a_star(Area_Coverage::Cell &start,
-                          Area_Coverage::Cell &goal,
-                          std::vector<std::vector<int>> &pheromone)
+                          Area_Coverage::Cell &goal)
 {
   // Define priority queue for open set
   std::priority_queue<Node *, std::vector<Node *>, CompareNodes> open_set;
@@ -252,7 +251,7 @@ Area_Coverage::run_a_star(Area_Coverage::Cell &start,
       {
         // Calculate neighbor's g and h values
         int new_g = current->g + 1;
-        int new_h = get_heuristic({new_row, new_col}, goal,pheromone);
+        int new_h = get_heuristic({new_row, new_col}, goal);
 
         // Create neighbor Node
         Node *neighbor = new Node(new_row, new_col, new_g, new_h, current);
@@ -275,8 +274,7 @@ void Area_Coverage::mark_path(std::vector<Area_Coverage::Cell> &path)
     map[path[i].row][path[i].col] = 2;
   }
 }
-void Area_Coverage::display_pheremone(
-    std::vector<std::vector<int>> &pheromone)
+void Area_Coverage::display_pheremone()
 {
   for (int i = 0; i < pheromone.size(); ++i)
   {
@@ -316,13 +314,18 @@ void Area_Coverage::display_map()
 }
 // A* algorithm modified for zigzag coverage
 std::vector<Area_Coverage::Cell>
-Area_Coverage::area_coverage(std::vector<std::vector<int>> &pheromone,
-                             std::vector<Area_Coverage::Cell> &waypoints,
+Area_Coverage::area_coverage(std::vector<Area_Coverage::Cell> &waypoints,
                              Area_Coverage::Cell &start,
                              Area_Coverage::Cell &goal)
 {
   std::vector<Area_Coverage::Cell> path;
   Area_Coverage::Cell current;
+  //Check if object is at start
+  if (map[start.row][start.col]== 1){
+    std::cout<< "Error: There is an object at start\n";
+    return std::vector<Area_Coverage::Cell>();
+  }
+
   for (int i = 1; i < waypoints.size(); ++i)
   {
     // condition to prevent going to unreachable waypoints
@@ -339,7 +342,7 @@ Area_Coverage::area_coverage(std::vector<std::vector<int>> &pheromone,
    
     bool object = false;
     // Run A* algorithm between current and next waypoint
-    std::vector<Area_Coverage::Cell> segment_path = run_a_star(current, next, pheromone);
+    std::vector<Area_Coverage::Cell> segment_path = run_a_star(current, next);
     
     path.insert(path.end(), segment_path.begin(), segment_path.end());
     mark_path(path);
