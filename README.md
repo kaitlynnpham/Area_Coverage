@@ -1,2 +1,2 @@
 # Area_Coverage
-Area Coverage Around Objects Algorithm 
+Simplified Area Coverage Around Objects Algorithm 
