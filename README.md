@@ -1,7 +1,7 @@
-## Project Overview:
+## Project Overview
 During my internship, I collaborated with a team to develop an autonomous robot designed to be equipped with a pressure washer system for cleaning pool decks. Our primary challenge was to design a navigation system that could effectively maneuver around obstacles while ensuring complete coverage of the area.
 
-## Key Contributions:
+## Key Contributions
 
 Area Coverage Algorithm: I developed an area coverage algorithm in C++ using the A* Search method to enable efficient robot navigation, obstacle avoidance, and cover a defined area. The algorithm was integrated with Madara Middlware and utilized sensor data from Mid-360 LiDAR and Emlid GNSS. 
 
@@ -15,7 +15,7 @@ GPS Waypoint Generation: We integrated a GPS system using the Emlid Reach RS3 to
 ## Demo Video
 [Area Coverage Around Obstacles Demo ](https://youtu.be/kLdjPo3Pac8)
 
-## Tools:
+## Tools
 Mid-360 (LiDAR): LiDAR sensor for high-precision 3D mapping.
 
 
